@@ -3,3 +3,6 @@ dist
 
 *.db
 *.db-journal
+
+uploads/*
+!uploads/.gitkeep
