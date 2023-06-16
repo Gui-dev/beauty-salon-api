@@ -1,15 +1,27 @@
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import { ZodError } from 'zod'
+import { resolve } from 'node:path'
 import multipart from '@fastify/multipart'
+import fastifyStatic from '@fastify/static'
+import cors from '@fastify/cors'
 
 import { userRoutes } from './routes/users.routes'
+import { uploadRoutes } from './routes/upload.routes'
 import { AppError } from './errors/app-error'
-import { ZodError } from 'zod'
 
 const app = Fastify()
 const PORT = 3333 || process.env.PORT
 
 app.register(multipart)
+app.register(fastifyStatic, {
+  root: resolve(__dirname, '..', 'uploads'),
+  prefix: 'uploads',
+})
+app.register(cors, {
+  origin: true,
+})
 app.register(userRoutes)
+app.register(uploadRoutes)
 
 app.setErrorHandler((error, request: FastifyRequest, reply: FastifyReply) => {
   if (error instanceof AppError) {
