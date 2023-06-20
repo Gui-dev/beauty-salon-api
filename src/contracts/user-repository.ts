@@ -9,8 +9,8 @@ export interface IUserRepository {
     email,
     password,
   }: ICreateUserDTO): Promise<Omit<Users, 'avatar_url' | 'password'>>
-  findUserById(user_id: string): Promise<Omit<Users, 'password'> | null>
-  findUserByEmail(email: string): Promise<Omit<Users, 'password'> | null>
+  findUserById(user_id: string): Promise<Users | null>
+  findUserByEmail(email: string): Promise<Users | null>
   updateUser({
     password,
   }: IResetPasswordUserDTO): Promise<Omit<Users, 'password'>>

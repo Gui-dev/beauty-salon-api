@@ -20,9 +20,7 @@ export class UsersController {
     request: FastifyRequest,
     response: FastifyReply,
   ): Promise<FastifyReply> {
-    // await request.jwtVerify()
-    // const user_id = request.user.sub
-    const user_id = '2a879b9b-bdea-43b6-a296-181474044094'
+    const user_id = request.user.sub
     const { password } = resetPasswordUserValidation.parse(request.body)
     const resetPasswordUserService = new ResetPasswordUserService()
     const user = await resetPasswordUserService.execute({
