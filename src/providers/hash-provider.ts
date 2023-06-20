@@ -5,7 +5,10 @@ export class HashProvider {
     return hash(payload, 8)
   }
 
-  public static compareHash(payload: string, hashed: string): Promise<boolean> {
+  public static async compareHash(
+    payload: string,
+    hashed: string,
+  ): Promise<boolean> {
     return compare(payload, hashed)
   }
 }
