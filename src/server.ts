@@ -9,6 +9,7 @@ import { server } from './shared'
 import { auth } from './plugins/auth'
 import { userRoutes } from './routes/users.routes'
 import { uploadRoutes } from './routes/upload.routes'
+import { schedulesRoutes } from './routes/schedules.routes'
 import { AppError } from './errors/app-error'
 
 export const main = () => {
@@ -25,11 +26,15 @@ export const main = () => {
   server.register(auth)
   server.register(userRoutes)
   server.register(uploadRoutes)
+  server.register(schedulesRoutes)
 
   server.setErrorHandler(
     (error, request: FastifyRequest, reply: FastifyReply) => {
       if (error instanceof AppError) {
         reply.status(error.statusCode).send({ error: error.message })
+      }
+      if (error.code === 'FST_JWT_NO_AUTHORIZATION_IN_HEADER') {
+        reply.status(401).send({ error: 'Unauthorized user' })
       }
       if (error instanceof ZodError) {
         const toSend = {
