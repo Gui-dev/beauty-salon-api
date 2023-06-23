@@ -4,6 +4,7 @@ import { endOfDay, startOfDay } from 'date-fns'
 import { IScheduleRepository } from '../contracts/schedule-repository'
 import { ICreateScheduleDTO } from '../dtos/create-schedule-dto'
 import { prisma } from '../lib/prisma'
+import { IUpdateScheduleDTO } from '../dtos/update-schedule-dto'
 
 export class ScheduleRepository implements IScheduleRepository {
   public async create({
@@ -18,6 +19,16 @@ export class ScheduleRepository implements IScheduleRepository {
         date,
       },
     })
+    return schedule
+  }
+
+  public async findScheduleById(id: string): Promise<Schedule | null> {
+    const schedule = await prisma.schedule.findUnique({
+      where: {
+        id,
+      },
+    })
+
     return schedule
   }
 
@@ -45,5 +56,18 @@ export class ScheduleRepository implements IScheduleRepository {
     })
 
     return schedules
+  }
+
+  public async update({ id, date }: IUpdateScheduleDTO): Promise<Schedule> {
+    const schedule = await prisma.schedule.update({
+      where: {
+        id,
+      },
+      data: {
+        date,
+      },
+    })
+
+    return schedule
   }
 }
