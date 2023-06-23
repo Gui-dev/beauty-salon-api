@@ -9,4 +9,5 @@ export const schedulesRoutes = async (app: FastifyInstance): Promise<void> => {
   })
 
   app.post('/schedules', scheduleController.store)
+  app.get('/schedules', scheduleController.index)
 }
