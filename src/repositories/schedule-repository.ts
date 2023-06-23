@@ -1,4 +1,5 @@
 import { Schedule } from '@prisma/client'
+import { endOfDay, startOfDay } from 'date-fns'
 
 import { IScheduleRepository } from '../contracts/schedule-repository'
 import { ICreateScheduleDTO } from '../dtos/create-schedule-dto'
@@ -28,5 +29,21 @@ export class ScheduleRepository implements IScheduleRepository {
     })
 
     return schedule
+  }
+
+  public async findAll(date: Date): Promise<Schedule[] | null> {
+    const schedules = await prisma.schedule.findMany({
+      where: {
+        date: {
+          gte: startOfDay(date),
+          lt: endOfDay(date),
+        },
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    })
+
+    return schedules
   }
 }
