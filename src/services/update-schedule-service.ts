@@ -6,13 +6,21 @@ import { AppError } from '../errors/app-error'
 import { ScheduleRepository } from '../repositories/schedule-repository'
 import { startOfHour, isBefore, isEqual, getHours } from 'date-fns'
 
+interface IUpdateScheduleServiceRequest {
+  user_id: string
+  data: IUpdateScheduleDTO
+}
+
 export class UpdateScheduleService {
   private scheduleRepository: IScheduleRepository
   constructor() {
     this.scheduleRepository = new ScheduleRepository()
   }
 
-  public async execute({ id, date }: IUpdateScheduleDTO): Promise<Schedule> {
+  public async execute({
+    user_id,
+    data: { id, date },
+  }: IUpdateScheduleServiceRequest): Promise<Schedule> {
     const dateFormatted = new Date(date)
     const hourStart = startOfHour(dateFormatted)
     const hour = getHours(hourStart)
@@ -25,11 +33,19 @@ export class UpdateScheduleService {
       throw new AppError('Create the schedule is from 9 am to 6 pm')
     }
 
-    const scheduleExists = await this.scheduleRepository.findScheduleById(id)
+    const scheduleExists = await this.scheduleRepository.findScheduleById(
+      user_id,
+      id,
+    )
 
     if (!scheduleExists) {
       throw new AppError('Schedule not found')
     }
+
+    if (user_id !== scheduleExists.user_id) {
+      throw new AppError('Unauthorized user')
+    }
+
     if (isEqual(hourStart, new Date(scheduleExists.date))) {
       throw new AppError('Schedule date is not available')
     }

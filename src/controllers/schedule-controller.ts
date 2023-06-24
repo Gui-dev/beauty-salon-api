@@ -14,9 +14,10 @@ export class ScheduleController {
     request: FastifyRequest,
     response: FastifyReply,
   ): Promise<FastifyReply> {
+    const user_id = request.user.sub
     const { date } = listScheduleValidation.parse(request.query)
     const listScheduleService = new ListScheduleService()
-    const schedules = await listScheduleService.execute({ date })
+    const schedules = await listScheduleService.execute({ user_id, date })
     return response.status(201).send({ schedules })
   }
 
@@ -24,9 +25,15 @@ export class ScheduleController {
     request: FastifyRequest,
     response: FastifyReply,
   ): Promise<FastifyReply> {
+    const user_id = request.user.sub
     const { name, phone, date } = createScheduleValidation.parse(request.body)
     const createScheduleService = new CreateScheduleService()
-    const schedule = await createScheduleService.execute({ name, phone, date })
+    const schedule = await createScheduleService.execute({
+      user_id,
+      name,
+      phone,
+      date,
+    })
     return response.status(201).send({ schedule })
   }
 
@@ -34,10 +41,17 @@ export class ScheduleController {
     request: FastifyRequest,
     response: FastifyReply,
   ): Promise<FastifyReply> {
+    const user_id = request.user.sub
     const { id } = updateScheduleParamIdValidation.parse(request.params)
     const { date } = updateScheduleDateValidation.parse(request.body)
     const updateScheduleService = new UpdateScheduleService()
-    const schedule = await updateScheduleService.execute({ id, date })
+    const schedule = await updateScheduleService.execute({
+      user_id,
+      data: {
+        id,
+        date,
+      },
+    })
 
     return response.status(201).send({ schedule })
   }

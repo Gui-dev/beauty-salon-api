@@ -6,6 +6,7 @@ import { ScheduleRepository } from '../repositories/schedule-repository'
 import { AppError } from '../errors/app-error'
 
 interface IListScheduleService {
+  user_id: string
   date?: Date
 }
 
@@ -15,9 +16,12 @@ export class ListScheduleService {
     this.scheduleRepository = new ScheduleRepository()
   }
 
-  public async execute({ date }: IListScheduleService): Promise<Schedule[]> {
+  public async execute({
+    user_id,
+    date,
+  }: IListScheduleService): Promise<Schedule[]> {
     const parseDate = date ? parseISO(date.toString()) : new Date()
-    const schedules = await this.scheduleRepository.findAll(parseDate)
+    const schedules = await this.scheduleRepository.findAll(user_id, parseDate)
 
     if (!schedules) {
       throw new AppError('There is no schedule for today')

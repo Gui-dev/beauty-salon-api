@@ -4,8 +4,8 @@ import { IUpdateScheduleDTO } from '../dtos/update-schedule-dto'
 
 export interface IScheduleRepository {
   create(data: ICreateScheduleDTO): Promise<Schedule>
-  findScheduleById(id: string): Promise<Schedule | null>
-  findScheduleByDate(date: Date): Promise<Schedule | null>
-  findAll(date: Date): Promise<Schedule[] | null>
+  findScheduleById(user_id: string, id: string): Promise<Schedule | null>
+  findScheduleByDate(user_id: string, date: Date): Promise<Schedule | null>
+  findAll(user_id: string, date: Date): Promise<Schedule[] | null>
   update(date: IUpdateScheduleDTO): Promise<Schedule>
 }

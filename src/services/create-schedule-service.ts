@@ -12,6 +12,7 @@ export class CreateScheduleService {
   }
 
   public async execute({
+    user_id,
     name,
     phone,
     date,
@@ -35,6 +36,7 @@ export class CreateScheduleService {
       throw new AppError('Schedule date is not available')
     }
     const schedule = await this.scheduleRepository.create({
+      user_id,
       name,
       phone,
       date: hourStart,

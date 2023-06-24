@@ -8,12 +8,14 @@ import { IUpdateScheduleDTO } from '../dtos/update-schedule-dto'
 
 export class ScheduleRepository implements IScheduleRepository {
   public async create({
+    user_id,
     name,
     phone,
     date,
   }: ICreateScheduleDTO): Promise<Schedule> {
     const schedule = await prisma.schedule.create({
       data: {
+        user_id,
         name,
         phone,
         date,
@@ -22,9 +24,13 @@ export class ScheduleRepository implements IScheduleRepository {
     return schedule
   }
 
-  public async findScheduleById(id: string): Promise<Schedule | null> {
-    const schedule = await prisma.schedule.findUnique({
+  public async findScheduleById(
+    user_id: string,
+    id: string,
+  ): Promise<Schedule | null> {
+    const schedule = await prisma.schedule.findFirst({
       where: {
+        user_id,
         id,
       },
     })
@@ -32,9 +38,13 @@ export class ScheduleRepository implements IScheduleRepository {
     return schedule
   }
 
-  public async findScheduleByDate(date: Date): Promise<Schedule | null> {
+  public async findScheduleByDate(
+    user_id: string,
+    date: Date,
+  ): Promise<Schedule | null> {
     const schedule = await prisma.schedule.findFirst({
       where: {
+        user_id,
         date,
       },
     })
@@ -42,9 +52,13 @@ export class ScheduleRepository implements IScheduleRepository {
     return schedule
   }
 
-  public async findAll(date: Date): Promise<Schedule[] | null> {
+  public async findAll(
+    user_id: string,
+    date: Date,
+  ): Promise<Schedule[] | null> {
     const schedules = await prisma.schedule.findMany({
       where: {
+        user_id,
         date: {
           gte: startOfDay(date),
           lt: endOfDay(date),
