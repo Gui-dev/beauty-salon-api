@@ -13,6 +13,7 @@ interface ISessionServiceResponse {
     avatar_url: string | null
   }
   token: string
+  refresh_token: string
 }
 
 export class SessionService {
@@ -39,6 +40,16 @@ export class SessionService {
       },
       {
         sub: userExists.id,
+        expiresIn: '15m',
+      },
+    )
+
+    const refreshToken = server.jwt.sign(
+      {
+        email: userExists.email,
+      },
+      {
+        sub: userExists.id,
         expiresIn: '7d',
       },
     )
@@ -51,6 +62,7 @@ export class SessionService {
         avatar_url: userExists.avatar_url,
       },
       token,
+      refresh_token: refreshToken,
     }
   }
 }
