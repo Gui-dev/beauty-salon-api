@@ -5,7 +5,7 @@ import { UploadFileController } from '../controllers/upload-file-controller'
 const uploadFileController = new UploadFileController()
 
 export const uploadRoutes = async (app: FastifyInstance): Promise<void> => {
-  app.post(
+  app.put(
     '/uploads',
     {
       onRequest: [app.authenticate],
