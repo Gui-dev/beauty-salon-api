@@ -4,9 +4,11 @@ import { createWriteStream } from 'node:fs'
 import { extname, resolve } from 'node:path'
 import { promisify } from 'node:util'
 import { pipeline } from 'node:stream'
+import { Users } from '@prisma/client'
 
 import { AppError } from '../errors/app-error'
-import { prisma } from '../lib/prisma'
+import { IUserRepository } from '../contracts/user-repository'
+import { UserRepository } from '../repositories/user-repository'
 
 interface IUploadUserAvatarService {
   user_id: string
@@ -17,9 +19,15 @@ interface IUploadUserAvatarService {
 }
 
 export class UploadUserAvatarService {
+  private userRepository: IUserRepository
+
+  constructor() {
+    this.userRepository = new UserRepository()
+  }
+
   public async execute(
     data: IUploadUserAvatarService,
-  ): Promise<void | AppError> {
+  ): Promise<Omit<Users, 'password'> | AppError> {
     if (!data.file) {
       return new AppError('File is required', 400)
     }
@@ -43,13 +51,11 @@ export class UploadUserAvatarService {
       .concat(data.request.hostname)
     const fileUrl = new URL(`/uploads/${fileName}`, fullUrl).toString()
 
-    await prisma.users.update({
-      where: {
-        id: data.user_id,
-      },
-      data: {
-        avatar_url: fileUrl,
-      },
+    const user = await this.userRepository.updateUserAvatar({
+      user_id: data.user_id,
+      avatar_url: fileUrl,
     })
+
+    return user
   }
 }
