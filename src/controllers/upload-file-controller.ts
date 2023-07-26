@@ -26,8 +26,8 @@ export class UploadFileController {
     }
 
     const uploadUserAvatarService = new UploadUserAvatarService()
-    const fileUrl = await uploadUserAvatarService.execute(uploadFile)
+    const user = await uploadUserAvatarService.execute(uploadFile)
 
-    return response.status(201).send(fileUrl)
+    return response.status(201).send(user)
   }
 }
