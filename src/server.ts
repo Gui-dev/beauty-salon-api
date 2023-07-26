@@ -36,6 +36,9 @@ export const main = () => {
       if (error.code === 'FST_JWT_NO_AUTHORIZATION_IN_HEADER') {
         reply.status(401).send({ error: 'Unauthorized user' })
       }
+      if (error.code === 'FST_JWT_AUTHORIZATION_TOKEN_EXPIRED') {
+        reply.status(401).send({ error: 'Token exprired' })
+      }
       if (error instanceof ZodError) {
         const toSend = {
           message: 'Validation error',
