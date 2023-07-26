@@ -11,13 +11,7 @@ const refreshTokenController = new RefreshTokenController()
 export const userRoutes = async (app: FastifyInstance): Promise<void> => {
   app.post('/users', usersController.store)
   app.post('/users/login', sessionController.store)
-  app.post(
-    '/users/refresh',
-    {
-      onRequest: [app.authenticate],
-    },
-    refreshTokenController.create,
-  )
+  app.post('/users/refresh', refreshTokenController.create)
   app.put(
     '/users/reset-password',
     {
