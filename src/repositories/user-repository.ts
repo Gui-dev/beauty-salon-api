@@ -4,6 +4,7 @@ import { IUserRepository } from '../contracts/user-repository'
 import { ICreateUserDTO } from '../dtos/create-user-dto'
 import { IResetPasswordUserDTO } from '../dtos/reset-password-user-dto'
 import { prisma } from '../lib/prisma'
+import { IUpdateAvatarDTO } from '../dtos/update-avatar-dto'
 
 export class UserRepository implements IUserRepository {
   public async create({
@@ -55,6 +56,28 @@ export class UserRepository implements IUserRepository {
       },
       data: {
         password,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar_url: true,
+      },
+    })
+
+    return user
+  }
+
+  public async updateUserAvatar({
+    user_id,
+    avatar_url,
+  }: IUpdateAvatarDTO): Promise<Omit<Users, 'password'>> {
+    const user = await prisma.users.update({
+      where: {
+        id: user_id,
+      },
+      data: {
+        avatar_url,
       },
       select: {
         id: true,

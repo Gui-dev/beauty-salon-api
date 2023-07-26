@@ -2,6 +2,7 @@ import { Users } from '@prisma/client'
 
 import { ICreateUserDTO } from '../dtos/create-user-dto'
 import { IResetPasswordUserDTO } from '../dtos/reset-password-user-dto'
+import { IUpdateAvatarDTO } from '../dtos/update-avatar-dto'
 
 export interface IUserRepository {
   create({
@@ -14,4 +15,8 @@ export interface IUserRepository {
   updateUser({
     password,
   }: IResetPasswordUserDTO): Promise<Omit<Users, 'password'>>
+  updateUserAvatar({
+    user_id,
+    avatar_url,
+  }: IUpdateAvatarDTO): Promise<Omit<Users, 'password'>>
 }
