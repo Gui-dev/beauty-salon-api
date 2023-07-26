@@ -5,6 +5,11 @@ interface IRefreshTokenService {
   refresh_token: string
 }
 
+interface IRefreshTokenResponse {
+  token: string
+  refresh_token: string
+}
+
 interface IPayloadTokenResponse {
   email: string
   sub: string
@@ -15,7 +20,7 @@ interface IPayloadTokenResponse {
 export class RefreshTokenService {
   public async execute({
     refresh_token,
-  }: IRefreshTokenService): Promise<string> {
+  }: IRefreshTokenService): Promise<IRefreshTokenResponse> {
     if (!refresh_token) {
       throw new AppError('Refresh token is missing', 401)
     }
@@ -30,7 +35,19 @@ export class RefreshTokenService {
         expiresIn: '15m',
       },
     )
+    const refreshToken = server.jwt.sign(
+      {
+        email,
+      },
+      {
+        sub,
+        expiresIn: '7d',
+      },
+    )
 
-    return newToken
+    return {
+      token: newToken,
+      refresh_token: refreshToken,
+    }
   }
 }

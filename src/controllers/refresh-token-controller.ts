@@ -11,6 +11,6 @@ export class RefreshTokenController {
     const refreshTokenService = new RefreshTokenService()
     const refreshToken = await refreshTokenService.execute({ refresh_token })
 
-    return response.status(201).send({ refresh_token: refreshToken })
+    return response.status(201).send(refreshToken)
   }
 }
