@@ -18,7 +18,7 @@ export class ScheduleController {
     const { date } = listScheduleValidation.parse(request.query)
     const listScheduleService = new ListScheduleService()
     const schedules = await listScheduleService.execute({ user_id, date })
-    return response.status(201).send({ schedules })
+    return response.status(201).send(schedules)
   }
 
   public async store(
@@ -34,7 +34,7 @@ export class ScheduleController {
       phone,
       date,
     })
-    return response.status(201).send({ schedule })
+    return response.status(201).send(schedule)
   }
 
   public async update(

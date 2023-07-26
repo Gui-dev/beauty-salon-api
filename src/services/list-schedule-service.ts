@@ -1,5 +1,4 @@
 import { Schedule } from '@prisma/client'
-import { parseISO } from 'date-fns'
 
 import { IScheduleRepository } from '../contracts/schedule-repository'
 import { ScheduleRepository } from '../repositories/schedule-repository'
@@ -7,7 +6,7 @@ import { AppError } from '../errors/app-error'
 
 interface IListScheduleService {
   user_id: string
-  date?: Date
+  date: Date
 }
 
 export class ListScheduleService {
@@ -20,7 +19,7 @@ export class ListScheduleService {
     user_id,
     date,
   }: IListScheduleService): Promise<Schedule[]> {
-    const parseDate = date ? parseISO(date.toString()) : new Date()
+    const parseDate = date || new Date()
     const schedules = await this.scheduleRepository.findAll(user_id, parseDate)
 
     if (!schedules) {
