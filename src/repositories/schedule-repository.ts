@@ -84,4 +84,12 @@ export class ScheduleRepository implements IScheduleRepository {
 
     return schedule
   }
+
+  public async delete(id: string): Promise<void> {
+    await prisma.schedule.delete({
+      where: {
+        id,
+      },
+    })
+  }
 }

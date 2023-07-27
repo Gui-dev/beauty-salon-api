@@ -8,4 +8,5 @@ export interface IScheduleRepository {
   findScheduleByDate(user_id: string, date: Date): Promise<Schedule | null>
   findAll(user_id: string, date: Date): Promise<Schedule[] | null>
   update(date: IUpdateScheduleDTO): Promise<Schedule>
+  delete(id: string): Promise<void>
 }

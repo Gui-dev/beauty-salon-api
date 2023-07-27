@@ -8,6 +8,8 @@ import {
   updateScheduleParamIdValidation,
 } from '../validation/update-schedule-validation'
 import { UpdateScheduleService } from '../services/update-schedule-service'
+import { DeleteScheduleService } from '../services/delete-schedule-service'
+import { deleteScheduleParamIdValidation } from '../validation/delete-schedule-validation'
 
 export class ScheduleController {
   public async index(
@@ -54,5 +56,19 @@ export class ScheduleController {
     })
 
     return response.status(201).send({ schedule })
+  }
+
+  public async delete(
+    request: FastifyRequest,
+    response: FastifyReply,
+  ): Promise<FastifyReply> {
+    const { id } = deleteScheduleParamIdValidation.parse(request.params)
+    const user_id = request.user.sub
+    const deleteScheduleService = new DeleteScheduleService()
+    await deleteScheduleService.execute({
+      user_id,
+      id,
+    })
+    return response.status(203).send()
   }
 }
