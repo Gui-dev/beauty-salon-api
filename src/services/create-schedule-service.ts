@@ -30,6 +30,7 @@ export class CreateScheduleService {
     }
 
     const checkIsAvailable = await this.scheduleRepository.findScheduleByDate(
+      user_id,
       hourStart,
     )
     if (checkIsAvailable) {
